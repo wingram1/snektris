@@ -1,0 +1,2 @@
+# snektris
+Snake + Tetris prototype
