@@ -5,7 +5,7 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     // controls direction
-    private Vector2 _direction = Vector2.right;
+    private Vector2 _direction = Vector2.down;
 
     // controls segments
     private List<Transform> _segments;
@@ -35,6 +35,11 @@ public class Snake : MonoBehaviour
         {
             _direction = Vector2.right;
         }
+
+        if (_segments.Count <= 3)
+        {
+           Grow(); 
+        }
     }
 
     private void FixedUpdate()
@@ -53,12 +58,6 @@ public class Snake : MonoBehaviour
             this.transform.position.y + _direction.y,
             0.0f
         );
-
-        if (_segments.Count <= 3)
-        {
-           Grow(); 
-        }
-        
     }
 
     private void Grow()
@@ -81,15 +80,22 @@ public class Snake : MonoBehaviour
         _segments.Clear();
         _segments.Add(this.transform);
 
-        this.transform.position = Vector3.zero;
+        this.transform.position = new Vector3(
+            0.5f,
+            9.5f,
+            0.0f
+        );
+        _direction = Vector2.down;
     }
 
     // Collision check
-    private void OnTiggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Obstacle") {
-            // Freeze & fall
+            Debug.Log("Collision with obstacle");
             ResetState();
+
+            // Freeze & fall
         }
     }
 }
