@@ -11,6 +11,9 @@ public class Snake : MonoBehaviour
     private List<Transform> _segments;
     public Transform segmentPrefab;
 
+    private List<Transform> _blocks;
+    public Transform blockPrefab;
+
     private void Start()
     {
         _segments = new List<Transform>();
@@ -19,6 +22,8 @@ public class Snake : MonoBehaviour
 
     private void Update()
     {
+        // get WASD direction
+        // TODO: bug where if inputting side=>back in quick succession, snake runs into itself immediately
         if (Input.GetKeyDown(KeyCode.W) && _direction != Vector2.down)
         {
             _direction = Vector2.up;
@@ -36,6 +41,7 @@ public class Snake : MonoBehaviour
             _direction = Vector2.right;
         }
 
+        // Grow until default length of 4
         if (_segments.Count <= 3)
         {
            Grow(); 
@@ -58,6 +64,8 @@ public class Snake : MonoBehaviour
             this.transform.position.y + _direction.y,
             0.0f
         );
+
+        // Debug.Log(this.transform.position);
     }
 
     private void Grow()
@@ -71,15 +79,30 @@ public class Snake : MonoBehaviour
 
     private void ResetState()
     {
-        // loop through segments to destroy
+        _blocks = new List<Transform>();
+        _blocks.Add(this.transform);
+        
+
+        // loop through segments to convert snake to block
         for (int i = 1; i < _segments.Count; i++)
         {
+            // generate block
+            Transform block = Instantiate(this.blockPrefab);
+            block.position = _segments[i].position;
+
+            // destroy segment
             Destroy(_segments[i].gameObject);
+
+            _blocks.Add(block);
         }
+        _blocks.Add(this.transform);
 
         _segments.Clear();
         _segments.Add(this.transform);
 
+        Debug.Log(_blocks.Count);
+
+        // Snake respawn at top middle
         this.transform.position = new Vector3(
             0.5f,
             9.5f,
@@ -93,9 +116,12 @@ public class Snake : MonoBehaviour
     {
         if (other.tag == "Obstacle") {
             Debug.Log("Collision with obstacle");
-            ResetState();
+            
 
-            // Freeze & fall
+            // generate tetromino using snake blocks
+            // when tetronimo has touched ground, reset snake
+
+            ResetState();
         }
     }
 }
