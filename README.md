@@ -1,2 +1,2 @@
 # snektris
-Snake + Tetris prototype
+Snake + Tetris prototype. Under construction.
