@@ -39,7 +39,7 @@ public class Block : MonoBehaviour
                 this.transform.position.y + 1,
                 0.0f
             );
-
+            // TODO: see if there's a way to group blocks together so you can tell them all to stop
         }
     }
 
